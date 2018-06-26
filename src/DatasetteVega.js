@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import vegaEmbed from 'vega-embed';
-import './App.css';
+import './DatasetteVega.css';
 
 const serialize = obj => Object.keys(obj).map(
   key => obj[key] ? `g.${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}` : ''
 ).join('&');
 
-const unserialize = s => {
+const unserialize = (s, prefix) => {
   if (s && s[0] === '#') {
     s = s.slice(1);
   }
@@ -14,19 +14,20 @@ const unserialize = s => {
     return {};
   }
   var obj = {};
-  s.split('&').forEach(bit => {
+  s.split('&').filter(bit => bit.slice(0, prefix.length + 1) === `{prefix).`).forEach(bit => {
     let pair = bit.split('=');
     obj[decodeURIComponent(pair[0]).replace(/^g\./, '')] = decodeURIComponent(pair[1]);
   });
   return obj;
 };
 
-class App extends Component {
+class DatasetteVega extends Component {
   state = {
+    columns: this.props.columns || [],
     mark: "bar",
-    x_column: this.props.columns[0],
+    x_column: null,
     x_type: "ordinal",
-    y_column: this.props.columns[1],
+    y_column: null,
     y_type: "quantitative",
     color_column: "",
     size_column: ""
@@ -53,16 +54,61 @@ class App extends Component {
       this.renderGraph();
     });
   }
+  jsonUrl() {
+    let url = this.props.base_url;
+    if (/\?/.exec(url)) {
+      url += '&';
+    } else {
+      url += '?';
+    }
+    url += '_shape=array';
+    return url;
+  }
   componentDidMount() {
     window.onpopstate = this.onPopStateChange.bind(this);
-    this.renderGraph();
+    // Load the columns
+    let url = this.jsonUrl();
+    if (this.props.columns) {
+      return;
+    }
+    fetch(url).then(r => r.json()).then(data => {
+      if (data.length > 1) {
+        // Set columns to first item's keys
+        const columns = Object.keys(data[0]);
+        console.log(columns);
+        this.setState({
+          columns: columns,
+          x_column: columns[0],
+          y_column: columns[1],
+        }, this.renderGraph);
+      }
+    });
+  }
+  serializeState() {
+    return serialize((({
+      mark,
+      x_column,
+      x_type,
+      y_column,
+      y_type,
+      color_column,
+      size_column
+   }) => ({
+      mark,
+      x_column,
+      x_type,
+      y_column,
+      y_type,
+      color_column,
+      size_column
+    }))(this.state));
   }
   onPopStateChange(ev) {
     window.lastPopEv = ev;
-    let expected = '#' + serialize(this.state);
+    const expected = '#' + this.serializeState();
     if (expected !== document.location.hash) {
       this.setState(
-        unserialize(document.location.hash), this.renderGraph.bind(this)
+        unserialize(document.location.hash, 'g'), this.renderGraph.bind(this)
       );
     }
   }
@@ -83,14 +129,15 @@ class App extends Component {
     }
     const spec = {
       data: {
-        url: this.props.json_url
+        url: this.jsonUrl()
       },
       mark: this.state.mark,
       encoding: encoding
     }
-    if (spec.mark) {
+    console.log('spec= ', spec);
+    if (spec.mark && spec.encoding.x.field && spec.encoding.y.field) {
       vegaEmbed("#vis", spec, {theme: 'quartz', tooltip: true});
-      document.location.hash = '#' + serialize(this.state);
+      document.location.hash = '#' + this.serializeState()
       this.setState({spec: spec});
     }
   }
@@ -105,52 +152,45 @@ class App extends Component {
   }
   render() {
     const onChangeSelect = this.onChangeSelect.bind(this);
-    if (!this.state.mark) {
-      return null;
-    }
+    const columns = this.state.columns;
+    console.log(columns);
     return (
-      <form action="" method="GET" id="graphForm">
+      (columns.length > 1) ? <form action="" method="GET" id="graphForm">
         <div>
-          Mark: <select name="mark" value={this.state.mark} onChange={ev => onChangeSelect("mark", ev)}>
+          <label>Type of chart: <select name="mark" value={this.state.mark} onChange={ev => onChangeSelect("mark", ev)}>
             {this.markOptions.map(option => <option key={option.value} value={option.value}>{option.name}</option>)}
-          </select>
+          </select></label>
         </div>
         <div>
-          X column: <select name="x_column" value={this.state.x_column} onChange={ev => onChangeSelect("x_column", ev)}>
-            {this.props.columns.map(column => <option key={column} value={column}>{column}</option>)}
-          </select>
-        </div>
-        <div>
-          X type: <select name="x_type" value={this.state.x_type} onChange={ev => onChangeSelect("x_type", ev)}>
+          <label>X <select name="x_column" value={this.state.x_column || ''} onChange={ev => onChangeSelect("x_column", ev)}>
+            {columns.map(column => <option key={column} value={column}>{column}</option>)}
+          </select></label>
+          <label>X type: <select name="x_type" value={this.state.x_type} onChange={ev => onChangeSelect("x_type", ev)}>
             {this.typeOptions.map(option => <option key={option.value} value={option.value}>{option.name}</option>)}
-          </select>
+          </select></label>
         </div>
         <div>
-          Y column: <select name="y_column" value={this.state.y_column} onChange={ev => onChangeSelect("y_column", ev)}>
-            {this.props.columns.map(column => <option key={column} value={column}>{column}</option>)}
-          </select>
-        </div>
-        <div>
+          <label>Y <select name="y_column" value={this.state.y_column || ''} onChange={ev => onChangeSelect("y_column", ev)}>
+            {columns.map(column => <option key={column} value={column}>{column}</option>)}
+          </select></label>
           Y type: <select name="y_type" value={this.state.y_type} onChange={ev => onChangeSelect("y_type", ev)}>
             {this.typeOptions.map(option => <option key={option.value} value={option.value}>{option.name}</option>)}
           </select>
         </div>
         <div>
-          Color column: <select name="color_column" value={this.state.color_column} onChange={ev => onChangeSelect("color_column", ev)}>
+          <label>Color <select name="color_column" value={this.state.color_column} onChange={ev => onChangeSelect("color_column", ev)}>
             <option value="">-- none --</option>
-            {this.props.columns.map(column => <option key={column} value={column}>{column}</option>)}
-          </select>
-        </div>
-        <div>
-          Size column: <select name="size_column" value={this.state.size_column} onChange={ev => onChangeSelect("size_column", ev)}>
+            {columns.map(column => <option key={column} value={column}>{column}</option>)}
+          </select></label>
+          <label>Size <select name="size_column" value={this.state.size_column} onChange={ev => onChangeSelect("size_column", ev)}>
             <option value="">-- none --</option>
-            {this.props.columns.map(column => <option key={column} value={column}>{column}</option>)}
-          </select>
+            {columns.map(column => <option key={column} value={column}>{column}</option>)}
+          </select></label>
         </div>
         <div><button onClick={this.toggleAxis.bind(this)}>Swap X and Y</button></div>
-      </form>
+      </form> : null
     );
   }
 }
 
-export default App;
+export default DatasetteVega;

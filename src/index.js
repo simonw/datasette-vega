@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import DatasetteVega from './DatasetteVega';
 
 ReactDOM.render(
   /*<App columns={[
@@ -17,7 +17,6 @@ ReactDOM.render(
   json_url="https://fivethirtyeight.datasettes.com/fivethirtyeight-45d758d/bechdel%2Fmovies.json?_shape=array"
   // json_url="https://fivethirtyeight.datasettes.com/fivethirtyeight-45d758d/airline-safety%2Fairline-safety.json?_shape=array"
   */
-  <App columns={"rowid,year,imdb,title,test,clean_test,binary,budget,domgross,intgross,code,budget_2013$,domgross_2013$,intgross_2013$,period code,decade code".split(",")}
-  json_url="https://fivethirtyeight.datasettes.com/fivethirtyeight-45d758d.json?sql=select+rowid%2C+*+from+%5Bbechdel%2Fmovies%5D+order+by+random%28%29+limit+200&_shape=array"
+  <DatasetteVega base_url="https://fivethirtyeight.datasettes.com/fivethirtyeight-45d758d.json?sql=select+rowid%2C+*+from+%5Bbechdel%2Fmovies%5D+order+by+random%28%29+limit+200"
   />, document.getElementById('root')
 );

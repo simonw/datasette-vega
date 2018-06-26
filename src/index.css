@@ -1,5 +1,14 @@
 body {
   margin: 0;
-  padding: 0;
+  padding: 1em;
   font-family: sans-serif;
+}
+
+
+form div {
+  margin-bottom: 0.5em
+}
+
+label {
+  padding-right: 0.5em;
 }
