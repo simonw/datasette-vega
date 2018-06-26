@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - "stable"
+cache:
+  directories:
+  - node_modules
+script:
+  - CI=true npm test
+
+jobs:
+  include:
+    - stage: deploy datasette-vega-latest.datasette.io
+      on: travis-ci
+      script:
+        - npm install -g now
+        - npm run build
+        - echo '{"name":"datasette-vega-latest","alias":"datasette-vega-latest.datasette.io"}' > now.json
+        - cd build && now --name=datasette-vega-latest --token=$NOW_TOKEN
+        - now alias --token=$NOW_TOKEN
