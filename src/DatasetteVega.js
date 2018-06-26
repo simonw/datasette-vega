@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import vegaEmbed from 'vega-embed';
 import './DatasetteVega.css';
 
-const serialize = obj => Object.keys(obj).map(
-  key => obj[key] ? `g.${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}` : ''
+const serialize = (obj, prefix) => Object.keys(obj).filter(key => obj[key]).map(
+  key => `${prefix}.${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`
 ).join('&');
 
 const unserialize = (s, prefix) => {
@@ -14,9 +14,9 @@ const unserialize = (s, prefix) => {
     return {};
   }
   var obj = {};
-  s.split('&').filter(bit => bit.slice(0, prefix.length + 1) === `{prefix).`).forEach(bit => {
+  s.split('&').filter(bit => bit.slice(0, prefix.length + 1) === `${prefix}.`).forEach(bit => {
     let pair = bit.split('=');
-    obj[decodeURIComponent(pair[0]).replace(/^g\./, '')] = decodeURIComponent(pair[1]);
+    obj[decodeURIComponent(pair[0]).replace(new RegExp(`^${prefix}\\.`), '')] = decodeURIComponent(pair[1]);
   });
   return obj;
 };
@@ -75,7 +75,6 @@ class DatasetteVega extends Component {
       if (data.length > 1) {
         // Set columns to first item's keys
         const columns = Object.keys(data[0]);
-        console.log(columns);
         this.setState({
           columns: columns,
           x_column: columns[0],
@@ -101,7 +100,7 @@ class DatasetteVega extends Component {
       y_type,
       color_column,
       size_column
-    }))(this.state));
+    }))(this.state), 'g');
   }
   onPopStateChange(ev) {
     window.lastPopEv = ev;
@@ -134,10 +133,10 @@ class DatasetteVega extends Component {
       mark: this.state.mark,
       encoding: encoding
     }
-    console.log('spec= ', spec);
     if (spec.mark && spec.encoding.x.field && spec.encoding.y.field) {
       vegaEmbed("#vis", spec, {theme: 'quartz', tooltip: true});
-      document.location.hash = '#' + this.serializeState()
+      document.location.hash = '#' + this.serializeState();
+      // Add to state so react debug tools can see it (for debugging):
       this.setState({spec: spec});
     }
   }
@@ -153,7 +152,6 @@ class DatasetteVega extends Component {
   render() {
     const onChangeSelect = this.onChangeSelect.bind(this);
     const columns = this.state.columns;
-    console.log(columns);
     return (
       (columns.length > 1) ? <form action="" method="GET" id="graphForm">
         <div>
