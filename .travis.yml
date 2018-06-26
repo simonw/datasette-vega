@@ -13,7 +13,7 @@ script:
 jobs:
   include:
     - stage: deploy datasette-vega-latest.datasette.io
-      on: travis-ci
+      on: master
       script:
         - npm install -g now
         - REACT_APP_STAGE=dev npm run build
