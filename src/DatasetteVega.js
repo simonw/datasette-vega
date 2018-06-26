@@ -74,7 +74,9 @@ class DatasetteVega extends Component {
     fetch(url).then(r => r.json()).then(data => {
       if (data.length > 1) {
         // Set columns to first item's keys
-        const columns = Object.keys(data[0]);
+        const columns = Object.keys(data[0]).map(
+          key => (data[0][key] && data[0][key].label) ? `${key}.label` : key
+        );
         this.setState({
           columns: columns,
           x_column: columns[0],
