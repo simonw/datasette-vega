@@ -81,7 +81,9 @@ class DatasetteVega extends Component {
           columns: columns,
           x_column: columns[0],
           y_column: columns[1],
-        }, this.renderGraph);
+        }, () => {
+          this.onPopStateChange();
+        });
       }
     });
   }
