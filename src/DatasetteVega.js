@@ -33,9 +33,9 @@ class DatasetteVega extends Component {
     size_column: ""
   }
   markOptions = [
-    {"value": "bar", "name": "bar"},
-    {"value": "line", "name": "line"},
-    {"value": "circle", "name": "scatter"},
+    {"value": "bar", "name": "Bar"},
+    {"value": "line", "name": "Line"},
+    {"value": "circle", "name": "Scatter"},
   ]
   typeOptions = [
     {"value": "quantitative", "name": "Numeric"},
@@ -161,10 +161,17 @@ class DatasetteVega extends Component {
     const columns = this.state.columns;
     return (
       (columns.length > 1) ? <form action="" method="GET" id="graphForm" className="datasette-vega">
-        <div className="filter-row">
-          <label>Chart type <div className="select-wrapper"><select name="mark" value={this.state.mark} onChange={ev => onChangeSelect("mark", ev)}>
-            {this.markOptions.map(option => <option key={option.value} value={option.value}>{option.name}</option>)}
-          </select></div></label>
+        <h3>Charting options</h3>
+        <div className="filter-row radio-buttons">
+          {this.markOptions.map(option => (
+            <label key={option.value} value={option.value}><input
+              type="radio"
+              name="mark"
+              value={option.value}
+              checked={option.value === this.state.mark}
+              onChange={ev => onChangeSelect("mark", ev)}
+            /> {option.name}</label>
+          ))}
         </div>
         <div className="filter-row">
           <label>X column <div className="select-wrapper"><select name="x_column" value={this.state.x_column || ''} onChange={ev => onChangeSelect("x_column", ev)}>
@@ -182,6 +189,9 @@ class DatasetteVega extends Component {
             {this.typeOptions.map(option => <option key={option.value} value={option.value}>{option.name}</option>)}
           </select></div></label>
         </div>
+        <div className="swap-x-y">
+          <button onClick={this.toggleAxis.bind(this)}>Swap X and Y</button>
+        </div>
         <div className="filter-row">
           <label>Color <div className="select-wrapper"><select name="color_column" value={this.state.color_column} onChange={ev => onChangeSelect("color_column", ev)}>
             <option value="">-- none --</option>
@@ -192,7 +202,6 @@ class DatasetteVega extends Component {
             {columns.map(column => <option key={column} value={column}>{column}</option>)}
           </select></div></label>
         </div>
-        <div><button className="swap-x-y" onClick={this.toggleAxis.bind(this)}>Swap X and Y</button></div>
       </form> : null
     );
   }

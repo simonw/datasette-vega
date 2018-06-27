@@ -75,16 +75,20 @@
   font-size: 0.8em;
   box-shadow: 1px 2px 8px 2px rgba(0,0,0,0.08);
 }
-
+.datasette-vega h3 {
+  margin-top: 0;
+}
 .datasette-vega .swap-x-y {
-  color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  text-align: center;
+  margin-bottom: 0.6em;
+}
+.datasette-vega .swap-x-y button {
+  background-color: #fafafa;
+  border: 1px solid #ccc;
   font-weight: 400;
   cursor: pointer;
   text-align: center;
   vertical-align: middle;
-  border: 1px solid blue;
   padding: .5em 0.8em;
   line-height: 1;
   border-radius: .25rem;
@@ -97,4 +101,17 @@ form.datasette-vega label {
   display: inline;
   width: auto;
   padding-right: 0.3em;
+}
+
+form.datasette-vega div {
+  margin-bottom: 0.3em;
+}
+
+.datasette-vega .radio-buttons label {
+  margin-right: 2em;
+  display: inline-block;
+}
+
+.datasette-vega .radio-buttons {
+  margin-bottom: 1em;
 }
