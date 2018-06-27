@@ -66,3 +66,35 @@
   background-color: #f7f7f9;
   color: #1b1e23;
 }
+
+.datasette-vega {
+  margin: 1em 0;
+  padding: 1em;
+  width: auto;
+  display: inline-block;
+  font-size: 0.8em;
+  box-shadow: 1px 2px 8px 2px rgba(0,0,0,0.08);
+}
+
+.datasette-vega .swap-x-y {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid blue;
+  padding: .5em 0.8em;
+  line-height: 1;
+  border-radius: .25rem;
+  -webkit-appearance: button;
+  font-size: 0.7em;
+}
+
+form.datasette-vega label {
+  font-weight: bold;
+  display: inline;
+  width: auto;
+  padding-right: 0.3em;
+}

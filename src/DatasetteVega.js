@@ -35,17 +35,15 @@ class DatasetteVega extends Component {
   markOptions = [
     {"value": "bar", "name": "bar"},
     {"value": "line", "name": "line"},
-    {"value": "circle", "name": "circle"},
-    {"value": "square", "name": "square"},
-    {"value": "point", "name": "point"},
+    {"value": "circle", "name": "scatter"},
   ]
   typeOptions = [
-    {"value": "quantitative", "name": "Numbers (quantitative)"},
-    {"value": "quantitative-bin", "name": "Numbers (quantitative), binned"},
-    {"value": "temporal", "name": "Dates and times (temporal)"},
-    {"value": "temporal-bin", "name": "Dates and times (temporal), binned"},
-    {"value": "ordinal", "name": "Labels (ordinal)"},
-    {"value": "nominal", "name": "Categories (nominal)"},
+    {"value": "quantitative", "name": "Numeric"},
+    {"value": "quantitative-bin", "name": "Numeric, binned"},
+    {"value": "temporal", "name": "Date/time"},
+    {"value": "temporal-bin", "name": "Date/time, binned"},
+    {"value": "ordinal", "name": "Label"},
+    {"value": "nominal", "name": "Category"},
   ]
   onChangeSelect(name, ev) {
     ev.persist();
@@ -157,39 +155,39 @@ class DatasetteVega extends Component {
     const onChangeSelect = this.onChangeSelect.bind(this);
     const columns = this.state.columns;
     return (
-      (columns.length > 1) ? <form action="" method="GET" id="graphForm">
-        <div>
-          <label>Type of chart: <select name="mark" value={this.state.mark} onChange={ev => onChangeSelect("mark", ev)}>
+      (columns.length > 1) ? <form action="" method="GET" id="graphForm" className="datasette-vega">
+        <div className="filter-row">
+          <label>Chart type <div className="select-wrapper"><select name="mark" value={this.state.mark} onChange={ev => onChangeSelect("mark", ev)}>
             {this.markOptions.map(option => <option key={option.value} value={option.value}>{option.name}</option>)}
-          </select></label>
+          </select></div></label>
         </div>
-        <div>
-          <label>X <select name="x_column" value={this.state.x_column || ''} onChange={ev => onChangeSelect("x_column", ev)}>
+        <div className="filter-row">
+          <label>X column <div className="select-wrapper"><select name="x_column" value={this.state.x_column || ''} onChange={ev => onChangeSelect("x_column", ev)}>
             {columns.map(column => <option key={column} value={column}>{column}</option>)}
-          </select></label>
-          <label>X type: <select name="x_type" value={this.state.x_type} onChange={ev => onChangeSelect("x_type", ev)}>
+          </select></div></label>
+          <label>Type <div className="select-wrapper"><select name="x_type" value={this.state.x_type} onChange={ev => onChangeSelect("x_type", ev)}>
             {this.typeOptions.map(option => <option key={option.value} value={option.value}>{option.name}</option>)}
-          </select></label>
+          </select></div></label>
         </div>
-        <div>
-          <label>Y <select name="y_column" value={this.state.y_column || ''} onChange={ev => onChangeSelect("y_column", ev)}>
+        <div className="filter-row">
+          <label>Y column <div className="select-wrapper"><select name="y_column" value={this.state.y_column || ''} onChange={ev => onChangeSelect("y_column", ev)}>
             {columns.map(column => <option key={column} value={column}>{column}</option>)}
-          </select></label>
-          Y type: <select name="y_type" value={this.state.y_type} onChange={ev => onChangeSelect("y_type", ev)}>
+          </select></div></label>
+          <label>Type <div className="select-wrapper"><select name="y_type" value={this.state.y_type} onChange={ev => onChangeSelect("y_type", ev)}>
             {this.typeOptions.map(option => <option key={option.value} value={option.value}>{option.name}</option>)}
-          </select>
+          </select></div></label>
         </div>
-        <div>
-          <label>Color <select name="color_column" value={this.state.color_column} onChange={ev => onChangeSelect("color_column", ev)}>
+        <div className="filter-row">
+          <label>Color <div className="select-wrapper"><select name="color_column" value={this.state.color_column} onChange={ev => onChangeSelect("color_column", ev)}>
             <option value="">-- none --</option>
             {columns.map(column => <option key={column} value={column}>{column}</option>)}
-          </select></label>
-          <label>Size <select name="size_column" value={this.state.size_column} onChange={ev => onChangeSelect("size_column", ev)}>
+          </select></div></label>
+          <label>Size <div className="select-wrapper"><select name="size_column" value={this.state.size_column} onChange={ev => onChangeSelect("size_column", ev)}>
             <option value="">-- none --</option>
             {columns.map(column => <option key={column} value={column}>{column}</option>)}
-          </select></label>
+          </select></div></label>
         </div>
-        <div><button onClick={this.toggleAxis.bind(this)}>Swap X and Y</button></div>
+        <div><button className="swap-x-y" onClick={this.toggleAxis.bind(this)}>Swap X and Y</button></div>
       </form> : null
     );
   }
