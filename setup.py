@@ -4,7 +4,7 @@ from subprocess import check_output
 from wheel.bdist_wheel import bdist_wheel
 import os
 
-VERSION = '0.1'
+VERSION = '0.2'
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -49,7 +49,7 @@ setup(
     packages=['datasette_vega'],
     entry_points={
         'datasette': [
-            'cluster_map = datasette_vega'
+            'vega = datasette_vega'
         ],
     },
     package_data={
