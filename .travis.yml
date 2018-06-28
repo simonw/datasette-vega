@@ -22,6 +22,7 @@ jobs:
         - now alias --token=$NOW_TOKEN
     - stage: release tagged version
       if: tag IS present
+      language: python
       python: 3.6
       script:
         - pip install -U pip wheel
