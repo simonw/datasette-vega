@@ -3,6 +3,8 @@
 A [Datasette](https://github.com/simonw/datasette) plugin that provides tools
 for generating charts using [Vega](https://vega.github.io/).
 
+![Datasette Vega interface](datasette-vega.png)
+
 Try out the latest master build as a live demo at https://datasette-vega-latest.datasette.io/ or try the latest release installed as a plugin at https://fivethirtyeight.datasettes.com/
 
 To add this to your Datasette installation, install the plugin like so:
