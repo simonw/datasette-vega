@@ -23,8 +23,9 @@ const unserialize = (s, prefix) => {
 
 class DatasetteVega extends Component {
   state = {
-    columns: this.props.columns || [],
-    mark: "bar",
+    show: false,
+    columns: [],
+    mark: null,
     x_column: null,
     x_type: "ordinal",
     y_column: null,
@@ -66,9 +67,6 @@ class DatasetteVega extends Component {
     window.onpopstate = this.onPopStateChange.bind(this);
     // Load the columns
     let url = this.jsonUrl();
-    if (this.props.columns) {
-      return;
-    }
     fetch(url).then(r => r.json()).then(data => {
       if (data.length > 1) {
         // Set columns to first item's keys
@@ -80,12 +78,21 @@ class DatasetteVega extends Component {
             return key;
           }
         });
-        this.setState({
+        let initialState = {
           columns: columns,
           x_column: columns[0],
           y_column: columns[1],
-        }, () => {
+        };
+        // Is there state in the URL? If so use that too
+        let urlState = unserialize(document.location.hash, 'g');
+        if (Object.keys(urlState).length) {
+          initialState = Object.assign(initialState, urlState);
+          // And show the widget
+          initialState.show = true;
+        }
+        this.setState(initialState, () => {
           this.onPopStateChange();
+          this.renderGraph();
         });
       }
     });
@@ -112,7 +119,7 @@ class DatasetteVega extends Component {
   onPopStateChange(ev) {
     window.lastPopEv = ev;
     const expected = '#' + this.serializeState();
-    if (expected !== document.location.hash) {
+    if (expected !== document.location.hash && this.state.mark) {
       this.setState(
         unserialize(document.location.hash, 'g'), this.renderGraph.bind(this)
       );
@@ -141,10 +148,10 @@ class DatasetteVega extends Component {
       encoding: encoding
     }
     if (spec.mark && spec.encoding.x.field && spec.encoding.y.field) {
-      vegaEmbed("#vis", spec, {theme: 'quartz', tooltip: true});
+      vegaEmbed(this.chart, spec, {theme: 'quartz', tooltip: true});
       document.location.hash = '#' + this.serializeState();
       // Add to state so react debug tools can see it (for debugging):
-      this.setState({spec: spec});
+      this.setState({spec: spec, show: true});
     }
   }
   toggleAxis(ev) {
@@ -156,11 +163,19 @@ class DatasetteVega extends Component {
       y_type: prevState.x_type,
     }), this.renderGraph);
   }
+  showChart() {
+    this.setState({
+      show: true
+    }, this.renderGraph.bind(this));
+  }
   render() {
     const onChangeSelect = this.onChangeSelect.bind(this);
     const columns = this.state.columns;
+    if (!this.state.show) {
+      return <div className="datasette-vega-inactive"><button onClick={this.showChart.bind(this)}>Show charting options</button></div>;
+    }
     return (
-      (columns.length > 1) ? <form action="" method="GET" id="graphForm" className="datasette-vega">
+      (columns.length > 1) ? <div><form action="" method="GET" id="graphForm" className="datasette-vega">
         <h3>Charting options</h3>
         <div className="filter-row radio-buttons">
           {this.markOptions.map(option => (
@@ -202,7 +217,11 @@ class DatasetteVega extends Component {
             {columns.map(column => <option key={column} value={column}>{column}</option>)}
           </select></div></label>
         </div>
-      </form> : null
+      </form>
+      <div style={{overflow:'auto'}}>
+        <div ref={(c) => { this.chart = c; }}></div>
+      </div>
+      </div> : null
     );
   }
 }

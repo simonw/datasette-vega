@@ -82,7 +82,8 @@
   text-align: center;
   margin-bottom: 0.6em;
 }
-.datasette-vega .swap-x-y button {
+.datasette-vega button,
+.datasette-vega-inactive button {
   background-color: #fafafa;
   border: 1px solid #ccc;
   font-weight: 400;
@@ -94,6 +95,9 @@
   border-radius: .25rem;
   -webkit-appearance: button;
   font-size: 0.7em;
+}
+.datasette-vega-inactive {
+  margin-bottom: 1em;
 }
 
 form.datasette-vega label {
