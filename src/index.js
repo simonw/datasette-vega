@@ -3,6 +3,34 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import DatasetteVega from './DatasetteVega';
 
+const matchesCurrentHostAndPath = (url) => {
+  // Given a url, is it the same host and path as current page?
+  // (ignores querystring and fragment hash)
+  url = url.split('#')[0];
+  // Only activate if link is to current page (presumably with different querystring)
+  var currentHostAndPath = window.location.hostname;
+  if (window.location.port !== '') {
+    currentHostAndPath += ':' + window.location.port;
+  }
+  currentHostAndPath += window.location.pathname;
+  // Ignore http/s due to https://github.com/simonw/datasette/issues/333
+  var linkedHostAndPath = url.split('://')[1].split('?')[0];
+  return currentHostAndPath === linkedHostAndPath;
+};
+
+// Update any forms with current page as action when fragment changes
+const onFragmentChange = () => {
+  if (window.location.hash.length === 0) {
+    return;
+  }
+  Array.from(document.getElementsByTagName('form')).forEach(form => {
+    var action = form.action.split('#')[0];
+    if (matchesCurrentHostAndPath(action)) {
+      form.action = action + window.location.hash;
+    }
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   let visTool, jsonUrl;
   if (process.env.REACT_APP_STAGE === 'dev') {
@@ -28,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     jsonUrl += (jsonUrl.indexOf('?') > -1) ? '&' : '?';
     jsonUrl += '_shape=array'
     ReactDOM.render(
-      <DatasetteVega base_url={jsonUrl} />, visTool
+      <DatasetteVega base_url={jsonUrl} onFragmentChange={onFragmentChange} />, visTool
     );
   }
 });
@@ -55,17 +83,10 @@ window.addEventListener('click', function (ev) {
   var href = a.href;
   // Split off any existing #fragment
   href = href.split('#')[0];
-  // Only activate if link is to current page (presumably with different querystring)
-  var currentHostAndPath = window.location.hostname;
-  if (window.location.port !== '') {
-    currentHostAndPath += ':' + window.location.port;
-  }
-  currentHostAndPath += window.location.pathname;
-  // Ignore http/s due to https://github.com/simonw/datasette/issues/333
   var linkedHostQuery = href.split('?')[1];
-  var linkedHostAndPath = href.split('://')[1].split('?')[0];
-  if (currentHostAndPath === linkedHostAndPath) {
+  if (matchesCurrentHostAndPath(href)) {
     // Cancel click, navigate to this + fragment instead
+    var linkedHostAndPath = href.split('://')[1].split('?')[0];
     if (linkedHostQuery) {
       linkedHostAndPath += '?' + linkedHostQuery;
     }

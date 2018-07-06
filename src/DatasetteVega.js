@@ -150,6 +150,7 @@ class DatasetteVega extends Component {
     if (spec.mark && spec.encoding.x.field && spec.encoding.y.field) {
       vegaEmbed(this.chart, spec, {theme: 'quartz', tooltip: true});
       document.location.hash = '#' + this.serializeState();
+      this.props.onFragmentChange && this.props.onFragmentChange();
       // Add to state so react debug tools can see it (for debugging):
       this.setState({spec: spec, show: true});
     }
