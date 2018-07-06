@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Persist #settings across links to same page
 window.addEventListener('click', function (ev) {
-  if (window.location.hash.length == 0) {
+  if (window.location.hash.length === 0) {
     return true;
   }
   if (ev.altKey || ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.defaultPrevented) {
@@ -64,7 +64,7 @@ window.addEventListener('click', function (ev) {
   // Ignore http/s due to https://github.com/simonw/datasette/issues/333
   var linkedHostQuery = href.split('?')[1];
   var linkedHostAndPath = href.split('://')[1].split('?')[0];
-  if (currentHostAndPath == linkedHostAndPath) {
+  if (currentHostAndPath === linkedHostAndPath) {
     // Cancel click, navigate to this + fragment instead
     if (linkedHostQuery) {
       linkedHostAndPath += '?' + linkedHostQuery;
