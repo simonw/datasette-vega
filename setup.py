@@ -4,7 +4,7 @@ from subprocess import check_output
 from wheel.bdist_wheel import bdist_wheel
 import os
 
-VERSION = '0.5'
+VERSION = '0.5.1'
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
 

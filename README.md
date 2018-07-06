@@ -1,5 +1,8 @@
 # datasette-vega
 
+[![PyPI](https://img.shields.io/pypi/v/datasette-vega.svg)](https://pypi.org/project/datasette-vega/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/simonw/datasette-vega/blob/master/LICENSE)
+
 A [Datasette](https://github.com/simonw/datasette) plugin that provides tools
 for generating charts using [Vega](https://vega.github.io/).
 
