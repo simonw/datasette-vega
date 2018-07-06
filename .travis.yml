@@ -32,7 +32,6 @@ jobs:
           distributions: bdist_wheel
           password:
             secure: MzK2klzjn+gYgTyDwgjzxsCmOWXTl3r1W9kr3Y2GzdBXFz6PuZSQLpej4WHhm8AVqfqFh6SF+tnVAr8CqQO//NJ5CDow0lSJI8XeRlRiaNds9UX/JbpeBVtlN6WIDaT2ErzadodIY+NB8vcuF3QCqElUCJuepuLb12X+DpPO6I1fXCWX+W61T0Jr2CHQ98EK5AkVpppcuPgqPtl8N5Nt0/7iO0hjHcT2kdr+5nzUIeS1bXcZy+aAeuI1zbq7znh6sSzdu9cE+Uq26DZPNvPs4bhi35aBCS1fZUb43/5IiOyLHp6BBXypRATBV8cpyMJs38YeEqDZP4HFo0jIh7uD+1WShJ5raYcOHU6aotGYTJmp9+9hwQqnXZMDAx21bdNRpptAYJjO3EGU1K8HwLGBu3Kx0KfhIk8yXk7/nazADkiNh8mvnCORwd4h656UhCG0D4Nb+OUYC+iyp/LD4C7l+sFX3/ObQ6G6J0I+QL/l4ElsaNlhOmdtrpoV/dXbaN7MLKDl9OkoY7NiIGC91DIqXjelNRD1bsNJRWqODDEq0uod4LOZR42+814+yv066USQguKIG/UwKkR0aTJ6u0Ul6ngk/tvCStGg2tNaIi2dLok911DL636+kWaf5UIQGANOPMeVtW18nMV2tudti5mhyrpX7LNuayTLk0piMDsQdvQ=
-
           on:
             branch: master
             tags: true
