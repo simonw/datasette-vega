@@ -21,6 +21,8 @@ const unserialize = (s, prefix) => {
   return obj;
 };
 
+const escapeString = s => (s || '').replace(/"/g, '\\x22').replace(/'/g, '\\x27');
+
 class DatasetteVega extends Component {
   state = {
     show: false,
@@ -32,6 +34,10 @@ class DatasetteVega extends Component {
     y_type: "quantitative",
     color_column: "",
     size_column: ""
+  }
+  constructor(props) {
+    super(props);
+    this.chartRef = React.createRef();
   }
   markOptions = [
     {"value": "bar", "name": "Bar"},
@@ -132,7 +138,8 @@ class DatasetteVega extends Component {
     const y_bin = !!/-bin$/.exec(this.state.y_type);
     let encoding = {
       x: {field: this.state.x_column, type: x_type, bin: x_bin},
-      y: {field: this.state.y_column, type: y_type, bin: y_bin}
+      y: {field: this.state.y_column, type: y_type, bin: y_bin},
+      tooltip: {field: "_tooltip_summary", type: "ordinal"},
     }
     if (this.state.color_column) {
       encoding.color = {field: this.state.color_column, type: "nominal"};
@@ -144,11 +151,15 @@ class DatasetteVega extends Component {
       data: {
         url: this.jsonUrl()
       },
+      transform: [{
+        calculate: `'${escapeString(this.state.x_column)}: ' + datum['${escapeString(this.state.x_column)}'] + ', ${escapeString(this.state.y_column)}: ' + datum['${escapeString(this.state.y_column)}']`,
+        as: "_tooltip_summary"
+      }],
       mark: this.state.mark,
       encoding: encoding
     }
     if (spec.mark && spec.encoding.x.field && spec.encoding.y.field) {
-      vegaEmbed(this.chart, spec, {theme: 'quartz', tooltip: true});
+      vegaEmbed(this.chartRef.current, spec, {theme: 'quartz', tooltip: true});
       document.location.hash = '#' + this.serializeState();
       this.props.onFragmentChange && this.props.onFragmentChange();
       // Add to state so react debug tools can see it (for debugging):
@@ -220,7 +231,7 @@ class DatasetteVega extends Component {
         </div>
       </form>
       <div style={{overflow:'auto'}}>
-        <div ref={(c) => { this.chart = c; }}></div>
+        <div ref={this.chartRef}></div>
       </div>
       </div> : null
     );
