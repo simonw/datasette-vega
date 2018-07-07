@@ -34,8 +34,8 @@ class BuildStatic(Command):
         check_output(['npm', 'install'], cwd=ROOT)
         check_output(['npm', 'run', 'build'], cwd=ROOT)
         check_output(['mkdir', '-p', 'datasette_vega/static'], cwd=ROOT)
-        check_output("mv build/static/js/*.js datasette_vega/static/datasette-vega.js", shell=True, cwd=ROOT)
-        check_output("mv build/static/css/*.css datasette_vega/static/datasette-vega.css", shell=True, cwd=ROOT)
+        check_output("mv build/static/js/* datasette_vega/static/", shell=True, cwd=ROOT)
+        check_output("mv build/static/css/* datasette_vega/static/", shell=True, cwd=ROOT)
 
 
 setup(
@@ -55,8 +55,9 @@ setup(
     },
     package_data={
         'datasette_vega': [
-            'static/datasette-vega.js',
-            'static/datasette-vega.css',
+            'static/*.js',
+            'static/*.css',
+            'static/*.map',
         ],
     },
     cmdclass={
