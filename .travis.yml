@@ -30,8 +30,7 @@ jobs:
         - provider: pypi
           user: simonw
           distributions: bdist_wheel
-          password:
-            secure: Sl2jbgIhnr2IMHh3Hqg4yO0UsAOS/GYyJf3KdqfCHRHVTiHZaIKqMzcy/ErNzj11vqZcKHDdKEXWtqRLhKL6ZUlHxDeFa3wrfIe8QXwCnn1gmQddvl06ydr2WXjUKyL6f+q6pfON5O6R40NUqXxDr78YIE+uOu4FFJLODfSNRZxf6BP0qLU2wiDf86wxJf95kG3DPGNx2JRGQJqI2jSY30BL0QUCBpwHfF1wpzEp7+nX1vCnEEz2LsP8xGPDzFwNuj8px5HDjK6rRw9M8LP6CKsa65IK2pFwrOmLF0DnperwmgKBzF+atke/NQUlfHAaLjVKvA2w4Ff2xuH8v5ZGGg/gTi283CfFNhWHs2TGAZevAmsrRFKDhG6lTIUhCMSqcleL0moHZXoW0M5Xuwe3qQgJ8jw7OFJTJ3iGRzQnThp70F4XiHLeu+u0gvJOaNmG/xA/fVf6fFZbvCciIaqMrrdC0s/RLmsSOAMz8I767Pnby55Srlk8aYjlKma8lX37UlwYiF+xKgmHuXNtX0x1eQtFedFSgGLpXSsI6MyFcMbghmaTIPS6if8UfX1notbk6lb++nZiZ3ci4/Htl0t4zGBc1WAuBIlfYeS67JuiDXORP/XJRf+k6I4qsZJfInX5R1Nl2JiCNvc51o5fERu3RQpt8rob/46mOZx8UMcH9JY=
+          password: ${PYPI_PASSWORD}
           on:
             branch: master
             tags: true
