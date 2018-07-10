@@ -152,7 +152,12 @@ class DatasetteVega extends Component {
         url: this.jsonUrl()
       },
       transform: [{
-        calculate: `'${escapeString(this.state.x_column)}: ' + datum['${escapeString(this.state.x_column)}'] + ', ${escapeString(this.state.y_column)}: ' + datum['${escapeString(this.state.y_column)}']`,
+        calculate: `
+          '${escapeString(this.state.x_column)}: ' + datum['${escapeString(this.state.x_column)}'] +
+          ', ${escapeString(this.state.y_column)}: ' + datum['${escapeString(this.state.y_column)}'] +
+          (${!!this.state.color_column} ? ', ${escapeString(this.state.color_column)}: ' + datum['${escapeString(this.state.color_column)}'] : '') +
+          (${!!this.state.size_column} ? ', ${escapeString(this.state.size_column)}: ' + datum['${escapeString(this.state.size_column)}'] : '')
+        `,
         as: "_tooltip_summary"
       }],
       mark: this.state.mark,
