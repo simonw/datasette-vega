@@ -1,14 +1,14 @@
-body {
+body.datasette-vega-demo {
   margin: 0;
   padding: 1em;
   font-family: sans-serif;
 }
 
 
-form div {
+body.datasette-vega-demo form div {
   margin-bottom: 0.5em
 }
 
-label {
+body.datasette-vega-demo label {
   padding-right: 0.5em;
 }
