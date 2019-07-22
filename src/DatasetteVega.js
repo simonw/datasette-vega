@@ -185,6 +185,11 @@ class DatasetteVega extends Component {
       show: true
     }, this.renderGraph.bind(this));
   }
+  hideChart() {
+    this.setState({
+      show: false
+    }, this.renderGraph.bind(this));
+  }
   render() {
     const onChangeSelect = this.onChangeSelect.bind(this);
     const columns = this.state.columns;
@@ -192,7 +197,9 @@ class DatasetteVega extends Component {
       return <div className="datasette-vega-inactive"><button onClick={this.showChart.bind(this)}>Show charting options</button></div>;
     }
     return (
-      (columns.length > 1) ? <div><form action="" method="GET" id="graphForm" className="datasette-vega">
+      (columns.length > 1) ? <div>
+        <div className="datasette-vega-inactive"><button onClick={this.hideChart.bind(this)}>Hide chart</button></div>
+        <form action="" method="GET" id="graphForm" className="datasette-vega">
         <h3>Charting options</h3>
         <div className="filter-row radio-buttons">
           {this.markOptions.map(option => (
