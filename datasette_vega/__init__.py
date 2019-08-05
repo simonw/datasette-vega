@@ -27,3 +27,19 @@ def extra_css_urls():
 @hookimpl
 def extra_js_urls():
     return cached_filepaths_for_extension('js')
+
+@hookimpl
+def extra_body_script(template, database, table, datasette):
+    config = (
+        datasette.plugin_config("datasette-vega", database=database, table=table)
+        or {}
+    )
+    js = []
+    value = config.get("container")
+    if value:
+        js.append(
+            "window.DATASETTE_VEGA_{} = '{}';".format(
+                "CONTAINER", value
+            )
+        )
+    return "\n".join(js)
