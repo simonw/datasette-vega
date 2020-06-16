@@ -20,5 +20,3 @@ If you are publishing data using the `datasette publish` command, you can
 include this plugin like so:
 
     datasette publish now mydatabase.db --install=datasette-vega
-
-If you don't want to install any software at all, you can publish your CSV files with Datasette and activate this plugin using the web application at https://publish.datasettes.com/
