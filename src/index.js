@@ -47,8 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
       jsonUrl = jsonEl.getAttribute('href');
       // Create elements for adding graph tool to page
       visTool = document.createElement('div');
-      let table = document.querySelector('table.rows-and-columns');
-      table.parentNode.insertBefore(visTool, table);
+      const container = window.DATASETTE_VEGA_CONTAINER;
+      if (container && document.querySelector(container)) {
+          document.querySelector(container).appendChild(visTool);
+      } else {
+          let table = document.querySelector('table.rows-and-columns');
+          table.parentNode.insertBefore(visTool, table);
+      }
     }
   }
   if (jsonUrl) {
