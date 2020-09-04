@@ -64,5 +64,6 @@ setup(
         'bdist_wheel': BdistWheelWithBuildStatic,
         'build_static': BuildStatic,
     },
-    install_requires=['datasette']
+    install_requires=['datasette'],
+    extras_require={"test": ["pytest", "pytest-asyncio", "httpx"]}
 )
