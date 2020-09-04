@@ -20,10 +20,12 @@ def cached_filepaths_for_extension(extension):
 
 
 @hookimpl
-def extra_css_urls():
-    return cached_filepaths_for_extension('css')
+def extra_css_urls(view_name):
+    if view_name == "table":
+        return cached_filepaths_for_extension('css')
 
 
 @hookimpl
-def extra_js_urls():
-    return cached_filepaths_for_extension('js')
+def extra_js_urls(view_name):
+    if view_name == "table":
+        return cached_filepaths_for_extension('js')
