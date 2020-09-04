@@ -3,17 +3,14 @@ import glob
 import os
 
 cache = {}
-static_dir = os.path.join(
-    os.path.dirname(__file__), 'static'
-)
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+
 
 def cached_filepaths_for_extension(extension):
-    pattern = os.path.join(static_dir, '*.{}'.format(extension))
+    pattern = os.path.join(static_dir, "*.{}".format(extension))
     if pattern not in cache:
         cache[pattern] = [
-            "/-/static-plugins/datasette_vega/{}".format(
-                os.path.basename(g)
-            )
+            "/-/static-plugins/datasette_vega/{}".format(os.path.basename(g))
             for g in glob.glob(pattern)
         ]
     return cache[pattern]
@@ -22,10 +19,10 @@ def cached_filepaths_for_extension(extension):
 @hookimpl
 def extra_css_urls(view_name):
     if view_name == "table":
-        return cached_filepaths_for_extension('css')
+        return cached_filepaths_for_extension("css")
 
 
 @hookimpl
 def extra_js_urls(view_name):
     if view_name == "table":
-        return cached_filepaths_for_extension('js')
+        return cached_filepaths_for_extension("js")
