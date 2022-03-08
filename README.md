@@ -20,3 +20,23 @@ If you are publishing data using the `datasette publish` command, you can
 include this plugin like so:
 
     datasette publish now mydatabase.db --install=datasette-vega
+
+## Development
+
+To contribute to this tool, first checkout the code. 
+
+```bash
+git clone git@github.com:simonw/datasette-vega.git
+```
+
+Then, install dependencies
+
+```bash
+npm install
+```
+
+Then, you will be able to run a hot-reloading development server.
+
+```bash
+npm run start
+```
