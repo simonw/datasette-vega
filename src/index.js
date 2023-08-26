@@ -33,22 +33,22 @@ const onFragmentChange = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   let visTool, jsonUrl;
-  if (process.env.REACT_APP_STAGE === 'dev') {
-    // Dev mode - use graph elements already on the index.html page
+  let jsonEl = document.querySelector('.export-links a[href*=json]');
+  if (jsonEl) {
+    // If a JSON "export link" exists, infer that we're embedded on a datasette table page (i.e. running as a plugin).
+    // Add graph tool DOM elements to the page.
+    jsonUrl = jsonEl.getAttribute('href');
+    visTool = document.createElement('div');
+    let table = document.querySelector('table.rows-and-columns');
+    table.parentNode.insertBefore(visTool, table);
+  } else {
+    // Otherwise, assume we're running in dev mode (i.e. running via npm start), and that graph elements are already on
+    // the page.
     let m = /\?url=(.*)/.exec(window.location.search)
     if (m) {
       jsonUrl = decodeURIComponent(m[1]);
       document.getElementById('jsonUrl').value = jsonUrl;
       visTool = document.getElementById('vis-tool');
-    }
-  } else {
-    const jsonEl = document.querySelector('.export-links a[href*=json]');
-    if (jsonEl) {
-      jsonUrl = jsonEl.getAttribute('href');
-      // Create elements for adding graph tool to page
-      visTool = document.createElement('div');
-      let table = document.querySelector('table.rows-and-columns');
-      table.parentNode.insertBefore(visTool, table);
     }
   }
   if (jsonUrl) {
