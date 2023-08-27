@@ -83,7 +83,7 @@ window.addEventListener('click', function (ev) {
   // This expands the full URL even if the link is /relative:
   var href = a.href;
   // Split off any existing #fragment
-  href = href.split('#')[0];
+  var [href, hash] = href.split('#');
   var linkedHostQuery = href.split('?')[1];
   if (matchesCurrentHostAndPath(href)) {
     // Cancel click, navigate to this + fragment instead
@@ -92,7 +92,7 @@ window.addEventListener('click', function (ev) {
       linkedHostAndPath += '?' + linkedHostQuery;
     }
     ev.preventDefault();
-    window.location = window.location.protocol + '//' + linkedHostAndPath + window.location.hash;
+    window.location = window.location.protocol + '//' + linkedHostAndPath + '#' + hash;
     return false;
   }
   return true;

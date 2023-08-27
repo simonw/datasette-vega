@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,7 +13,14 @@
     <form action="." method="GET" style="margin-bottom: 2em">
       <input id="jsonUrl" type="text" name="url" value="https://fivethirtyeight.datasettes.com/fivethirtyeight/nba-elo~2Fnbaallelo.json" style="width: 80%; font-size: 1.2em;">
       <input type="submit" value="Load" style="font-size: 1.2em; border: 1px solid #ccc">
-      <p>Examples: <a href="./?url=https%3A%2F%2Ffivethirtyeight.datasettes.com%2Ffivethirtyeight%2Fnba-elo%7E2Fnbaallelo.json#g.mark=bar&g.x_column=game_id&g.x_type=ordinal&g.y_column=pts&g.y_type=quantitative&g.color_column=team_id">game_id/pts/team_id</a></p>
+      <details>
+        <summary>Examples</summary>
+        <ul>
+          <li><a href="./?url=https%3A%2F%2Ffivethirtyeight.datasettes.com%2Ffivethirtyeight%2Fnba-elo%7E2Fnbaallelo.json#g.mark=bar&g.x_column=game_id&g.x_type=ordinal&g.y_column=pts&g.y_type=quantitative&g.color_column=team_id">NBA ELO: points per game/team</a></li>
+          <li><a href="./?url=https%3A%2F%2Ffivethirtyeight.datasettes.com%2Ffivethirtyeight%2Fnba-elo~2Fnbaallelo.json#g.mark=circle&g.x_column=opp_pts&g.x_type=quantitative&g.y_column=pts&g.y_type=quantitative&g.color_column=game_result">NBA ELO: W/L vs. points</a></li>
+          <li><a href="./?url=https%3A%2F%2Ffivethirtyeight.datasettes.com%2Ffivethirtyeight%2Fbad-drivers~2Fbad-drivers.json#g.mark=bar&g.x_column=Number%20of%20drivers%20involved%20in%20fatal%20collisions%20per%20billion%20miles&g.x_type=quantitative&g.y_column=State&g.y_type=ordinal">Fatal crashes by {state, billion miles}</a></li>
+        </ul>
+      </details>
     </form>
     <div id="vis-tool"></div>
     <div id="vis-wrapper" style="overflow: auto">
