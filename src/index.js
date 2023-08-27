@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import './index.css';
 import DatasetteVega from './DatasetteVega';
 
@@ -55,8 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add _shape=array
     jsonUrl += (jsonUrl.indexOf('?') > -1) ? '&' : '?';
     jsonUrl += '_shape=array'
-    ReactDOM.render(
-      <DatasetteVega base_url={jsonUrl} onFragmentChange={onFragmentChange} />, visTool
+    let root = createRoot(visTool);
+    root.render(
+      <DatasetteVega base_url={jsonUrl} onFragmentChange={onFragmentChange} />
     );
   }
 });
