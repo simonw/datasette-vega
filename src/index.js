@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import './index.css';
 import DatasetteVega from './DatasetteVega';
 
@@ -33,30 +33,31 @@ const onFragmentChange = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   let visTool, jsonUrl;
-  if (process.env.REACT_APP_STAGE === 'dev') {
-    // Dev mode - use graph elements already on the index.html page
+  let jsonEl = document.querySelector('.export-links a[href*=json]');
+  if (jsonEl) {
+    // If a JSON "export link" exists, infer that we're embedded on a datasette table page (i.e. running as a plugin).
+    // Add graph tool DOM elements to the page.
+    jsonUrl = jsonEl.getAttribute('href');
+    visTool = document.createElement('div');
+    let table = document.querySelector('table.rows-and-columns');
+    table.parentNode.insertBefore(visTool, table);
+  } else {
+    // Otherwise, assume we're running in dev mode (i.e. running via npm start), and that graph elements are already on
+    // the page.
     let m = /\?url=(.*)/.exec(window.location.search)
     if (m) {
       jsonUrl = decodeURIComponent(m[1]);
       document.getElementById('jsonUrl').value = jsonUrl;
       visTool = document.getElementById('vis-tool');
     }
-  } else {
-    const jsonEl = document.querySelector('.export-links a[href*=json]');
-    if (jsonEl) {
-      jsonUrl = jsonEl.getAttribute('href');
-      // Create elements for adding graph tool to page
-      visTool = document.createElement('div');
-      let table = document.querySelector('table.rows-and-columns');
-      table.parentNode.insertBefore(visTool, table);
-    }
   }
   if (jsonUrl) {
     // Add _shape=array
     jsonUrl += (jsonUrl.indexOf('?') > -1) ? '&' : '?';
     jsonUrl += '_shape=array'
-    ReactDOM.render(
-      <DatasetteVega base_url={jsonUrl} onFragmentChange={onFragmentChange} />, visTool
+    let root = createRoot(visTool);
+    root.render(
+      <DatasetteVega base_url={jsonUrl} onFragmentChange={onFragmentChange} />
     );
   }
 });
@@ -82,7 +83,7 @@ window.addEventListener('click', function (ev) {
   // This expands the full URL even if the link is /relative:
   var href = a.href;
   // Split off any existing #fragment
-  href = href.split('#')[0];
+  var [href, hash] = href.split('#');
   var linkedHostQuery = href.split('?')[1];
   if (matchesCurrentHostAndPath(href)) {
     // Cancel click, navigate to this + fragment instead
@@ -91,7 +92,7 @@ window.addEventListener('click', function (ev) {
       linkedHostAndPath += '?' + linkedHostQuery;
     }
     ev.preventDefault();
-    window.location = window.location.protocol + '//' + linkedHostAndPath + window.location.hash;
+    window.location = window.location.protocol + '//' + linkedHostAndPath + '#' + hash;
     return false;
   }
   return true;
