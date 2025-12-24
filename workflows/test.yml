@@ -1,0 +1,40 @@
+name: Test
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    - name: Build static assets
+      run: |
+        npm install
+        npm run build
+        mkdir -p datasette_vega/static
+        mv build/static/js/* datasette_vega/static/
+        mv build/static/css/* datasette_vega/static/
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        uv sync --group dev
+    - name: Install Playwright browsers
+      run: |
+        uv run playwright install chromium --with-deps
+    - name: Run tests
+      run: |
+        uv run pytest
