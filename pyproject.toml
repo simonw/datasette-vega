@@ -1,0 +1,51 @@
+[project]
+name = "datasette-vega"
+version = "0.7a0"
+description = "A Datasette plugin that provides tools for generating charts using Vega"
+readme = "README.md"
+authors = [{name = "Simon Willison"}]
+license = "Apache-2.0"
+requires-python = ">=3.9"
+classifiers = [
+    "Framework :: Datasette",
+]
+dependencies = [
+    "datasette",
+]
+
+[project.urls]
+Homepage = "https://github.com/simonw/datasette-vega"
+Changelog = "https://github.com/simonw/datasette-vega/releases"
+Issues = "https://github.com/simonw/datasette-vega/issues"
+CI = "https://github.com/simonw/datasette-vega/actions"
+
+[project.entry-points.datasette]
+vega = "datasette_vega"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "httpx",
+    "playwright",
+    "pytest-playwright",
+]
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+# Run async tests before playwright tests to avoid event loop conflicts
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["datasette_vega*"]
+
+[tool.setuptools.package-data]
+datasette_vega = ["static/*.js", "static/*.css", "static/*.map"]

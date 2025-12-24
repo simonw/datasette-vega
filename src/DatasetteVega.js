@@ -53,9 +53,8 @@ class DatasetteVega extends Component {
     {"value": "nominal", "name": "Category"},
   ]
   onChangeSelect(name, ev) {
-    ev.persist();
-    window.lastEv = ev;
-    this.setState({[name]: ev.target.value}, () => {
+    const value = ev.target.value;
+    this.setState({[name]: value}, () => {
       this.renderGraph();
     });
   }
