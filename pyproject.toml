@@ -1,0 +1,31 @@
+[project]
+name = "datasette-vega"
+version = "0.7a0"
+description = "A Datasette plugin that provides tools for generating charts using Vega"
+readme = "README.md"
+authors = [{name = "Simon Willison"}]
+license = "Apache-2.0"
+dependencies = ["datasette"]
+
+[project.urls]
+Homepage = "https://github.com/simonw/datasette-vega"
+Issues = "https://github.com/simonw/datasette-vega/issues"
+CI = "https://github.com/simonw/datasette-vega/actions"
+Changelog = "https://github.com/simonw/datasette-vega/releases"
+
+[project.entry-points.datasette]
+vega = "datasette_vega"
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-asyncio", "httpx"]
+
+[dependency-groups]
+dev = ["pytest", "pytest-asyncio", "httpx"]
+
+[tool.uv.build-backend]
+module-root = ""
+source-include = ["tests/**"]
+
+[build-system]
+requires = ["uv_build>=0.9.18,<0.12.0"]
+build-backend = "uv_build"
