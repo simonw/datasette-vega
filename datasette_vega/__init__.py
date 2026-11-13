@@ -16,13 +16,19 @@ def cached_filepaths_for_extension(extension):
     return cache[pattern]
 
 
+def should_include_assets(template, view_name):
+    # Table pages, plus SQL query pages - those report view_name="database"
+    # but render query.html (or a custom query-*.html template)
+    return view_name == "table" or (template or "").startswith("query")
+
+
 @hookimpl
-def extra_css_urls(view_name):
-    if view_name == "table":
+def extra_css_urls(template, view_name):
+    if should_include_assets(template, view_name):
         return cached_filepaths_for_extension("css")
 
 
 @hookimpl
-def extra_js_urls(view_name):
-    if view_name == "table":
+def extra_js_urls(template, view_name):
+    if should_include_assets(template, view_name):
         return cached_filepaths_for_extension("js")

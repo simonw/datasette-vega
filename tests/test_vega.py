@@ -4,6 +4,16 @@ import pytest
 from datasette.app import Datasette
 
 
+async def make_datasette():
+    ds = Datasette()
+    db = ds.add_memory_database("test_vega")
+    await db.execute_write(
+        "create table if not exists t (id integer primary key, value integer)"
+    )
+    await db.execute_write("insert or replace into t (id, value) values (1, 10)")
+    return ds
+
+
 @pytest.mark.asyncio
 async def test_plugin_is_installed():
     ds = Datasette([], memory=True)
@@ -14,11 +24,19 @@ async def test_plugin_is_installed():
 
 
 @pytest.mark.asyncio
-async def test_assets_served_on_table_page():
-    ds = Datasette()
-    db = ds.add_memory_database("test_vega")
-    await db.execute_write("create table if not exists t (id integer primary key)")
-    response = await ds.client.get("/test_vega/t")
+@pytest.mark.parametrize(
+    "path,should_include",
+    (
+        ("/test_vega/t", True),
+        # Redirects to /test_vega/-/query?sql= on Datasette 1.0
+        ("/test_vega?sql=select+*+from+t", True),
+        ("/test_vega/t/1", False),
+        ("/test_vega", False),
+    ),
+)
+async def test_assets_included_on_table_and_query_pages(path, should_include):
+    ds = await make_datasette()
+    response = await ds.client.get(path, follow_redirects=True)
     assert response.status_code == 200
     js_urls = re.findall(
         r'<script src="(/-/static-plugins/datasette_vega/[^"]+\.js)"', response.text
@@ -27,6 +45,10 @@ async def test_assets_served_on_table_page():
         r'<link rel="stylesheet" href="(/-/static-plugins/datasette_vega/[^"]+\.css)"',
         response.text,
     )
+    if not should_include:
+        assert js_urls == []
+        assert css_urls == []
+        return
     assert len(js_urls) == 1, "Expected one bundle - run 'npm run build' first"
     assert len(css_urls) == 1
     for url in js_urls + css_urls:
