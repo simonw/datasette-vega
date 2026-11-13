@@ -43,12 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } else {
     const jsonEl = document.querySelector('.export-links a[href*=json]');
-    if (jsonEl) {
+    const table = document.querySelector('table.rows-and-columns');
+    // Row pages in Datasette 1.0a42+ have export links but no table
+    if (jsonEl && table) {
       jsonUrl = jsonEl.getAttribute('href');
       // Create elements for adding graph tool to page
       visTool = document.createElement('div');
-      let table = document.querySelector('table.rows-and-columns');
-      table.parentNode.insertBefore(visTool, table);
+      // Datasette 1.0a42+ wraps the table in a scrollable .table-wrapper
+      // card - insert above that rather than inside it
+      const anchor = table.closest('.table-wrapper') || table;
+      anchor.parentNode.insertBefore(visTool, anchor);
     }
   }
   if (jsonUrl) {
