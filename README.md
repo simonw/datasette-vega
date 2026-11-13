@@ -20,3 +20,22 @@ If you are publishing data using the `datasette publish` command, you can
 include this plugin like so:
 
     datasette publish now mydatabase.db --install=datasette-vega
+
+## Development
+
+The JavaScript is bundled using [esbuild](https://esbuild.github.io/). Install the dependencies and build the plugin's static assets into `datasette_vega/static/` like this:
+
+    npm install
+    npm run build
+
+This needs to run before building the Python package, since the bundled assets are not checked into the repository.
+
+To work on the charting interface against the demo page in `public/index.html`, with automatic rebuilds:
+
+    npm run dev
+
+Then open `http://localhost:3000/`.
+
+To run the Python tests (after `npm run build`):
+
+    uv run pytest
