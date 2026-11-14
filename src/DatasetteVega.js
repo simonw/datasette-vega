@@ -235,7 +235,7 @@ class DatasetteVega extends Component {
           </select></div></label>
         </div>
       </form>
-      <div style={{overflow:'auto'}}>
+      <div className="datasette-vega-chart" style={{overflow:'auto'}}>
         <div ref={this.chartRef}></div>
       </div>
       </div> : null

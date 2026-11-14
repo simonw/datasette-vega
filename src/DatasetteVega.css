@@ -96,6 +96,9 @@
   -webkit-appearance: button;
   font-size: 0.7em;
 }
+.datasette-vega-chart {
+  margin-bottom: 1em;
+}
 .datasette-vega-inactive {
   margin-bottom: 1em;
 }
