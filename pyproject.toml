@@ -5,6 +5,7 @@ description = "A Datasette plugin that provides tools for generating charts usin
 readme = "README.md"
 authors = [{name = "Simon Willison"}]
 license = "Apache-2.0"
+requires-python = ">=3.11"
 dependencies = ["datasette"]
 
 [project.urls]
